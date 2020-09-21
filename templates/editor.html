@@ -1,0 +1,213 @@
+  
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Editor</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 150px;
+        right: 100px;
+        bottom: 50px;
+        left: 400px;
+    }
+</style>
+</head>
+<body>
+    <a href="javascript:void(0);" class="submitbutton btn btn-danger " >Run</a>
+    <br> <br>
+Output:  
+<br>
+<div class="col-md-4">
+    <pre>{{output|safe}}</pre>
+
+
+<br>
+<div class="col-md-4">
+<label for="theme" style="color: black;"><h5>Theme:</h5></label>
+<select name="theme"  style="color: black;border:1px solid black" class="themeselect form-control" required id="theme" >
+                 
+                    <option value="eclipse">eclipse</option>
+                    <option value="github">github</option>
+                    <option value="chrome">chrome</option>
+                    <option value="cloud">cloud</option>
+                    <option value="twilight">twilight</option>
+                    <option value="nord_dark">nord_dark</option>
+                    <option value="monokai">monokai</option>
+</select>  
+</div>
+
+<div class="col-md-5">
+    <label for="lang" style="color: black;"><h5>Language:</h5></label>
+    <select name="lang" style="color: black;border:1px solid black" class="langselect form-control" required id="lang" >
+                     
+                        <option value="java">java</option>
+                        <option value="c">c</option> 
+                        <option value="c++">c++</option> 
+                        <option value="php">php</option>
+                        <option value="python">python</option>
+                       
+    </select>  
+    </div>
+    
+
+
+</div>
+
+
+
+
+
+
+
+<br><br>
+
+<form action="/" id="submitform" method="POST">
+ {%csrf_token%}
+ <input type="text" name="input" value="{{input}}"/>
+ {%if code is None%}
+ 
+<div id="editor" class="editor" style="font-size:15px;border:1px solid black">class Main
+{                
+    public static void main(String [] args)
+    {
+        
+    }
+}</div>  
+ {%elif code is not None%}
+ <div id="editor" style="font-size:15px;border:1px solid black">{{code}}</div>
+    {%endif%}   
+    
+   
+
+<input type="hidden" id="codevalue" class="codevalue" name="codevalue" />
+
+</form>
+
+
+
+    
+<script src="{% static 'js/ace.js'%}" type="text/javascript" charset="utf-8"></script>
+<script>
+
+    
+    $(document).ready(function(){
+
+        console.log(editor.getSession().getValue());
+        $('#codevalue').val(editor.getSession().getValue()); 
+      });
+
+      $(".submitbutton").each(function(){
+        $(this).on("click",function(){
+           
+               $('#submitform').submit()
+        });
+    });
+    
+     $('.langselect').change(function(){
+        switch(this.value){
+            case "java":
+            var editor = ace.edit("editor");
+            editor.session.setMode("ace/mode/java");
+            var code = "class Main{    public static void main(String [] args){ }}";
+         
+            break;
+
+            case "c":
+            var editor = ace.edit("editor");
+            editor.session.setMode("ace/mode/c_cpp");
+            var code ="#include<stdion.h> int main(){return 0}";
+           
+            break;
+
+            case "c++":
+            var editor = ace.edit("editor");
+            editor.session.setMode("ace/mode/c_cpp");
+          
+            break;
+
+            case "php":
+            var editor = ace.edit("editor");
+            editor.session.setMode("ace/mode/php");
+           
+            break;
+
+            case "python":
+            var editor = ace.edit("editor");
+            editor.session.setMode("ace/mode/python");
+         
+            break;
+
+           
+        }
+    });
+
+         $('.themeselect').change(function(){
+            switch(this.value){
+                case "eclipse":
+              
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/eclipse");
+                break;
+
+                case "github":
+            
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/github");
+                editor.session.setMode("ace/mode/java");
+                break;
+
+                case "chrome":
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/chrome");
+                editor.session.setMode("ace/mode/java");
+              
+                break;
+
+                case "cloud":
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/clouds");
+                editor.session.setMode("ace/mode/java");
+              
+                break;
+
+                case "twilight":
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/twilight");
+                editor.session.setMode("ace/mode/java");
+               
+                break;
+
+                case "nord_dark":
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/nord_dark");
+                editor.session.setMode("ace/mode/java");
+               
+                break;
+
+                case "monokai":
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/monokai");
+                editor.session.setMode("ace/mode/java");
+           
+                break;
+            }
+        });
+
+
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/eclipse");
+    editor.session.setMode("ace/mode/java");
+    editor.getSession().on("change", function () {
+        console.log(editor.getSession().getValue());
+        $('#codevalue').val(editor.getSession().getValue()); 
+});
+</script>
+
+</body>
+</html>
